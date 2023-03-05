@@ -11,7 +11,7 @@ func main() {
 	port := ":8080"
 	fmt.Printf("Starting server on %v\n", port)
 
-	http.ListenAndServe(port, routerHandler())
+	_ = http.ListenAndServe(port, routerHandler())
 }
 
 type Message struct {
