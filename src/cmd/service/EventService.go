@@ -49,11 +49,13 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 		event.Date == "" || event.Time == "" || event.Organizer == "" || event.Place == "" {
 		return []byte("Invalid data"), nil
 	}
-	dateEvent, err := time.Parse("2006-01-02", event.Date)
+
+	location, _ := time.LoadLocation("America/Argentina/Mendoza")
+	dateEvent, err := time.ParseInLocation("2006-01-02", event.Date, location)
 	if err != nil {
 		return []byte("Invalid date"), nil
 	}
-	timeEvent, err := time.Parse("15:04", event.Time)
+	timeEvent, err := time.ParseInLocation("15:04", event.Time, location)
 	if err != nil {
 		return []byte("Invalid time"), nil
 	}
