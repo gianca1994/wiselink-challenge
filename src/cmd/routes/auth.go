@@ -5,7 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"wiselink-challenge/src/internal/database"
-	jwt_auth "wiselink-challenge/src/internal/jwt_bearer"
+	jwt_auth "wiselink-challenge/src/internal/jwt"
 	"wiselink-challenge/src/models"
 )
 

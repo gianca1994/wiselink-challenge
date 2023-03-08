@@ -5,7 +5,7 @@ import (
 	"github.com/go-chi/jwtauth/v5"
 	"net/http"
 	"wiselink-challenge/src/cmd/service"
-	jwt_auth "wiselink-challenge/src/internal/jwt_bearer"
+	jwt_auth "wiselink-challenge/src/internal/jwt"
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {

@@ -1,4 +1,4 @@
-package jwt_bearer
+package jwt
 
 import (
 	"github.com/go-chi/jwtauth/v5"
@@ -19,7 +19,6 @@ func GenerateToken(user models.User) string {
 	jwtauth.SetExpiry(claims, time.Now().Add(time.Minute*60))
 	jwtauth.SetIssuedAt(claims, time.Now())
 	_, token, _ := jwtauth.New("HS512", []byte(secretJWTKey), nil).Encode(claims)
-
 	return token
 }
 
@@ -32,7 +31,6 @@ func ExtractClaims(tokenStr string) (jwt.MapClaims, bool) {
 	if err != nil {
 		return nil, false
 	}
-
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		return claims, true
 	} else {
@@ -43,7 +41,6 @@ func ExtractClaims(tokenStr string) (jwt.MapClaims, bool) {
 
 func TokenGetClaims(token string) jwt.MapClaims {
 	claims, _ := ExtractClaims(token)
-
 	if claims == nil {
 		return nil
 	}
