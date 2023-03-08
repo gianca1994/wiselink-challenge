@@ -2,25 +2,11 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/go-chi/jwtauth/v5"
-	"gorm.io/gorm"
 	"net/http"
-	"os"
-	"wiselink-challenge/src/internal/database"
+	"wiselink-challenge/src/cmd/service"
 	jwt_auth "wiselink-challenge/src/internal/jwt_bearer"
-	"wiselink-challenge/src/models"
 )
-
-func DbConnection() *gorm.DB {
-	db := database.NewPostgreSQL()
-
-	if db == nil {
-		fmt.Println("Error connecting to database")
-		os.Exit(0)
-	}
-	return db
-}
 
 func Home(w http.ResponseWriter, r *http.Request) {
 	port := ":8080"
@@ -41,18 +27,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("Invalid token"))
 		return
 	}
-
-	db := DbConnection()
-	var user models.User
-	var userResponse models.UserProfileResponse
-
-	db.Where("username = ?", claims["username"]).First(&user)
-
-	userResponse.Username = user.Username
-	userResponse.Email = user.Email
-	userResponse.Admin = user.Admin
-
-	data, _ := json.Marshal(userResponse)
+	data := service.GetProfileService(claims)
 
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)

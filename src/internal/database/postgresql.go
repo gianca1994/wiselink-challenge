@@ -11,6 +11,16 @@ import (
 	"wiselink-challenge/src/models"
 )
 
+func DbConnection() *gorm.DB {
+	db := NewPostgreSQL()
+
+	if db == nil {
+		fmt.Println("Error connecting to database")
+		os.Exit(0)
+	}
+	return db
+}
+
 func NewPostgreSQL() *gorm.DB {
 	projectName := regexp.MustCompile(`^(.*` + "wiselink-challenge" + `)`)
 	currentWorkDirectory, _ := os.Getwd()

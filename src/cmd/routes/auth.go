@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"wiselink-challenge/src/internal/database"
 	jwt_auth "wiselink-challenge/src/internal/jwt_bearer"
 	"wiselink-challenge/src/models"
 )
@@ -19,7 +20,7 @@ func CheckPasswordHash(hash, password string) bool {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	db := DbConnection()
+	db := database.DbConnection()
 
 	var UserLoginDTO models.UserLoginDTO
 	_ = json.NewDecoder(r.Body).Decode(&UserLoginDTO)
@@ -42,7 +43,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	db := DbConnection()
+	db := database.DbConnection()
 
 	var user models.User
 	var UserRegisterDTO models.UserRegisterDTO
