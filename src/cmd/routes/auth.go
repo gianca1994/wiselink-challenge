@@ -43,7 +43,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	db := database.DbConnection()
 
 	var user models.User
 	var UserRegisterDTO models.UserRegisterDTO
@@ -56,6 +55,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	user.Password = hash
 	user.Admin = false
 
+	db := database.DbConnection()
 	db.Create(&user)
 
 	_, _ = w.Write([]byte("User created successfully"))

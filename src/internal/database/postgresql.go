@@ -53,5 +53,10 @@ func NewPostgreSQL() *gorm.DB {
 		return nil
 	}
 
+	err = db.AutoMigrate(&models.Event{})
+	if err != nil {
+		return nil
+	}
+
 	return db
 }
