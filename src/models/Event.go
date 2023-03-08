@@ -39,3 +39,13 @@ type EventCreate struct {
 	Organizer string `json:"organizer"`
 	Place     string `json:"place"`
 }
+
+type EventUpdate struct {
+	ShortDesc string `json:"short_desc"`
+	LongDesc  string `json:"long_desc"`
+	Date      string `json:"date"`
+	Time      string `json:"time"`
+	Organizer string `json:"organizer"`
+	Place     string `json:"place"`
+	Status    string `json:"status"`
+}

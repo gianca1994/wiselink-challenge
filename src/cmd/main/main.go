@@ -31,9 +31,11 @@ func routerHandler() http.Handler {
 
 	r.Route("/events", func(r chi.Router) {
 		r.Get("/", routes.GetEvents)
+		r.Get("/{id}", routes.GetEvent)
+
 		r.Post("/", routes.CreateEvent)
-		//r.Get("/{id}", routes.GetEvent)
-		//r.Patch("/{id}", routes.UpdateEvent)
+
+		r.Patch("/{id}", routes.UpdateEvent)
 		r.Delete("/{id}", routes.DeleteEvent)
 	})
 
