@@ -34,7 +34,7 @@ func routerHandler() http.Handler {
 		r.Post("/", routes.CreateEvent)
 		//r.Get("/{id}", routes.GetEvent)
 		//r.Patch("/{id}", routes.UpdateEvent)
-		//r.Delete("/{id}", routes.DeleteEvent)
+		r.Delete("/{id}", routes.DeleteEvent)
 	})
 
 	return r

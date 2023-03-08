@@ -72,3 +72,23 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 	})
 	return []byte("Event created"), nil
 }
+
+func DeleteEventService(claims map[string]interface{}, idDeleted string) ([]byte, error) {
+	db := database.DbConnection()
+	var user models.User
+	db.Where("username = ?", claims["username"]).First(&user)
+
+	if user.Admin == false {
+		return []byte("Unauthorized"), nil
+	}
+
+	var event models.Event
+	db.Where("id = ?", idDeleted).First(&event)
+
+	if event.Id == 0 {
+		return []byte("Invalid event"), nil
+	}
+
+	db.Delete(&event)
+	return []byte("Event deleted"), nil
+}
