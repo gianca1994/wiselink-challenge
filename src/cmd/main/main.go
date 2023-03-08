@@ -25,7 +25,7 @@ func routerHandler() http.Handler {
 		r.Post("/register", routes.Register)
 	})
 
-	r.Group(func(r chi.Router) {
+	r.Route("/users", func(r chi.Router) {
 		r.Get("/profile", routes.GetProfile)
 	})
 
