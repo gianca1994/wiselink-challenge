@@ -44,9 +44,15 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	db := DbConnection()
 	var user models.User
+	var userResponse models.UserProfileResponse
 
 	db.Where("username = ?", claims["username"]).First(&user)
-	data, _ := json.Marshal(user)
+
+	userResponse.Username = user.Username
+	userResponse.Email = user.Email
+	userResponse.Admin = user.Admin
+
+	data, _ := json.Marshal(userResponse)
 
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)

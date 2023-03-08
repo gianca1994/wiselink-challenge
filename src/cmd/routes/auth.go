@@ -21,13 +21,13 @@ func CheckPasswordHash(hash, password string) bool {
 func Login(w http.ResponseWriter, r *http.Request) {
 	db := DbConnection()
 
-	var user models.User
+	var UserLoginDTO models.UserLoginDTO
+	_ = json.NewDecoder(r.Body).Decode(&UserLoginDTO)
 
-	_ = json.NewDecoder(r.Body).Decode(&user)
 	var userDB models.User
-	db.Where("username = ?", user.Username).First(&userDB)
+	db.Where("username = ?", UserLoginDTO.Username).First(&userDB)
 
-	if CheckPasswordHash(userDB.Password, user.Password) {
+	if CheckPasswordHash(userDB.Password, UserLoginDTO.Password) {
 		token := jwt_auth.GenerateToken(userDB)
 
 		data, _ := json.Marshal(map[string]string{

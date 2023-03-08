@@ -13,8 +13,19 @@ type User struct {
 	Admin    bool   `gorm:"not null"`
 }
 
+type UserProfileResponse struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Admin    bool   `json:"admin"`
+}
+
 type UserRegisterDTO struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Email    string `json:"email"`
+}
+
+type UserLoginDTO struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
