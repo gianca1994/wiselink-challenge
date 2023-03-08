@@ -11,6 +11,13 @@ import (
 	"wiselink-challenge/src/models"
 )
 
+func checkUserIsAdmin(claims map[string]interface{}) bool {
+	db := database.DbConnection()
+	var user models.User
+	db.Where("username = ?", claims["username"]).First(&user)
+	return user.Admin
+}
+
 func GetEventsService() []byte {
 	db := database.DbConnection()
 	var events []models.Event
@@ -55,11 +62,8 @@ func GetEvent(id string) ([]byte, error) {
 }
 
 func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte, error) {
-	db := database.DbConnection()
-	var user models.User
-	db.Where("username = ?", claims["username"]).First(&user)
-
-	if user.Admin == false {
+	adminRequired := checkUserIsAdmin(claims)
+	if adminRequired == false {
 		return []byte("Unauthorized"), nil
 	}
 
@@ -81,6 +85,7 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 		return []byte("Invalid time"), nil
 	}
 
+	db := database.DbConnection()
 	db.Create(&models.Event{
 		Title:     event.Title,
 		ShortDesc: event.ShortDesc,
@@ -95,11 +100,8 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 }
 
 func UpdateEventService(claims map[string]interface{}, param string, r *http.Request) ([]byte, error) {
-	db := database.DbConnection()
-	var user models.User
-	db.Where("username = ?", claims["username"]).First(&user)
-
-	if user.Admin == false {
+	adminRequired := checkUserIsAdmin(claims)
+	if adminRequired == false {
 		return []byte("Unauthorized"), nil
 	}
 
@@ -122,6 +124,7 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 	}
 
 	var eventDB models.Event
+	db := database.DbConnection()
 	db.Where("id = ?", param).First(&eventDB)
 	if eventDB.Id == 0 {
 		return []byte("Invalid event"), nil
@@ -141,17 +144,14 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 }
 
 func DeleteEventService(claims map[string]interface{}, idDeleted string) ([]byte, error) {
-	db := database.DbConnection()
-	var user models.User
-	db.Where("username = ?", claims["username"]).First(&user)
-
-	if user.Admin == false {
+	adminRequired := checkUserIsAdmin(claims)
+	if adminRequired == false {
 		return []byte("Unauthorized"), nil
 	}
 
 	var event models.Event
+	db := database.DbConnection()
 	db.Where("id = ?", idDeleted).First(&event)
-
 	if event.Id == 0 {
 		return []byte("Invalid event"), nil
 	}
