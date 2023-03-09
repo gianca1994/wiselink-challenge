@@ -16,6 +16,7 @@ type Event struct {
 	Organizer string    `gorm:"not null"`
 	Place     string    `gorm:"not null"`
 	Status    string    `gorm:"not null"`
+	Users     []User    `gorm:"many2many:user_events"`
 }
 
 type EventResponse struct {

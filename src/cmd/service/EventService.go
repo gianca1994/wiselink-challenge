@@ -32,6 +32,9 @@ func GetEventsService(claims map[string]interface{}) []byte {
 		}
 	}
 	data, _ := json.Marshal(eventsResponse)
+	if len(eventsResponse) == 0 {
+		return []byte("[]")
+	}
 	return data
 }
 
@@ -74,9 +77,8 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 		return []byte("Invalid data"), nil
 	}
 
-	location, _ := time.LoadLocation("America/Argentina/Mendoza")
-	dateEvent, _ := time.ParseInLocation("2006-01-02", event.Date, location)
-	timeEvent, _ := time.ParseInLocation("15:04", event.Time, location)
+	dateEvent, _ := time.Parse(time.RFC3339Nano, event.Date)
+	timeEvent, _ := time.Parse(time.RFC3339, event.Time)
 	return repository.CreateEvent(event, dateEvent, timeEvent)
 }
 
@@ -94,9 +96,8 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 		return []byte("Invalid data"), nil
 	}
 
-	location, _ := time.LoadLocation("America/Argentina/Mendoza")
-	dateEvent, _ := time.ParseInLocation("2006-01-02", event.Date, location)
-	timeEvent, _ := time.ParseInLocation("15:04", event.Time, location)
+	dateEvent, _ := time.Parse(time.RFC3339Nano, event.Date)
+	timeEvent, _ := time.Parse(time.RFC3339, event.Time)
 	return repository.UpdateEvent(param, event, dateEvent, timeEvent)
 }
 
