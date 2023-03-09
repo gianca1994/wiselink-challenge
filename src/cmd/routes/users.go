@@ -14,7 +14,12 @@ func Home(w http.ResponseWriter, r *http.Request) {
 	available_routes, _ := json.Marshal(map[string]string{
 		"POST, Login":    "http://localhost:" + port + "/auth/login",
 		"POST, Register": "http://localhost:" + port + "/auth/register",
-		"GET, Profile":   "http://localhost:" + port + "/profile",
+		"GET, Profile":   "http://localhost:" + port + "/users/profile",
+		"GET, Events":    "http://localhost:" + port + "/events",
+		"GET, Event":     "http://localhost:" + port + "/events/{id}",
+		"POST, Event":    "http://localhost:" + port + "/events",
+		"PATCH, Event":   "http://localhost:" + port + "/events/{id}",
+		"DELETE, Event":  "http://localhost:" + port + "/events/{id}",
 	})
 
 	w.Header().Set("Content-Type", "application/json")
