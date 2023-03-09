@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"time"
+	"wiselink-challenge/src/cmd/repository"
 
 	_ "github.com/jackc/pgx/v5/pgtype"
 	"net/http"
@@ -88,26 +89,13 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 	}
 
 	location, _ := time.LoadLocation("America/Argentina/Mendoza")
-	dateEvent, err := time.ParseInLocation("2006-01-02", event.Date, location)
-	if err != nil {
-		return []byte("Invalid date"), nil
-	}
-	timeEvent, err := time.ParseInLocation("15:04", event.Time, location)
-	if err != nil {
-		return []byte("Invalid time"), nil
-	}
+	dateEvent, _ := time.ParseInLocation("2006-01-02", event.Date, location)
+	timeEvent, _ := time.ParseInLocation("15:04", event.Time, location)
 
-	db := database.PostgreSQL()
-	db.Create(&models.Event{
-		Title:     event.Title,
-		ShortDesc: event.ShortDesc,
-		LongDesc:  event.LongDesc,
-		Date:      dateEvent,
-		Time:      timeEvent,
-		Organizer: event.Organizer,
-		Place:     event.Place,
-		Status:    "draft",
-	})
+	err := repository.CreateEvent(event, dateEvent, timeEvent)
+	if err != nil {
+		return nil, err
+	}
 	return []byte("Event created"), nil
 }
 
@@ -126,14 +114,8 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 	}
 
 	location, _ := time.LoadLocation("America/Argentina/Mendoza")
-	dateEvent, err := time.ParseInLocation("2006-01-02", event.Date, location)
-	if err != nil {
-		return []byte("Invalid date"), nil
-	}
-	timeEvent, err := time.ParseInLocation("15:04", event.Time, location)
-	if err != nil {
-		return []byte("Invalid time"), nil
-	}
+	dateEvent, _ := time.ParseInLocation("2006-01-02", event.Date, location)
+	timeEvent, _ := time.ParseInLocation("15:04", event.Time, location)
 
 	var eventDB models.Event
 	db := database.PostgreSQL()
