@@ -16,8 +16,8 @@ func GenerateToken(user models.User) string {
 		"username": user.Username,
 		"admin":    user.Admin,
 	}
-	JWT_TIME_EXPIRE, _ := strconv.Atoi(os.Getenv("JWT_TIME_EXPIRE"))
-	jwtauth.SetExpiry(claims, time.Now().Add(time.Minute*time.Duration(JWT_TIME_EXPIRE)))
+	jwt_expire, _ := strconv.Atoi(os.Getenv("JWT_TIME_EXPIRE_MINUTES"))
+	jwtauth.SetExpiry(claims, time.Now().Add(time.Minute*time.Duration(jwt_expire)))
 	jwtauth.SetIssuedAt(claims, time.Now())
 	_, token, _ := jwtauth.New("HS512", []byte(os.Getenv("JWT_SECRET")), nil).Encode(claims)
 	return token
