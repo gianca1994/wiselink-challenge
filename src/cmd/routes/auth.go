@@ -20,7 +20,7 @@ func CheckPasswordHash(hash, password string) bool {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	db := database.DbConnection()
+	db := database.PostgreSQL()
 
 	var UserLoginDTO models.UserLoginDTO
 	_ = json.NewDecoder(r.Body).Decode(&UserLoginDTO)
@@ -55,7 +55,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	user.Password = hash
 	user.Admin = false
 
-	db := database.DbConnection()
+	db := database.PostgreSQL()
 	db.Create(&user)
 
 	_, _ = w.Write([]byte("User created successfully"))

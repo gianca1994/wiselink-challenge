@@ -3,15 +3,23 @@ package main
 import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 	"net/http"
+	"os"
 	"wiselink-challenge/src/cmd/routes"
 	"wiselink-challenge/src/internal/database"
 )
 
 func main() {
-	port := ":8080"
+	if err := godotenv.Load(".env"); err != nil {
+		fmt.Println("Error loading .env file")
+		os.Exit(0)
+	}
+
+	port := ":" + os.Getenv("API_PORT")
+	database.Migrate()
+
 	fmt.Printf("Starting server on %v\n", port)
-	database.NewPostgreSQL()
 	_ = http.ListenAndServe(port, routerHandler())
 }
 

@@ -12,41 +12,53 @@ import (
 )
 
 func checkUserIsAdmin(claims map[string]interface{}) bool {
-	db := database.DbConnection()
+	db := database.PostgreSQL()
 	var user models.User
 	db.Where("username = ?", claims["username"]).First(&user)
 	return user.Admin
 }
 
-func GetEventsService() []byte {
-	db := database.DbConnection()
+func GetEventsService(claims map[string]interface{}) []byte {
+	db := database.PostgreSQL()
 	var events []models.Event
-	var eventsResponse []models.EventResponse
 	db.Find(&events)
+
+	adminRequired := checkUserIsAdmin(claims)
+	var eventsResponse []models.EventResponse
+
 	for _, event := range events {
-		eventsResponse = append(eventsResponse, models.EventResponse{
-			Id:        event.Id,
-			Title:     event.Title,
-			ShortDesc: event.ShortDesc,
-			LongDesc:  event.LongDesc,
-			Date:      event.Date.Format("2006:01:02"),
-			Time:      event.Time.Format("15:04"),
-			Organizer: event.Organizer,
-			Place:     event.Place,
-			Status:    event.Status,
-		})
+		if adminRequired || event.Status != "draft" {
+			eventsResponse = append(eventsResponse, models.EventResponse{
+				Id:        event.Id,
+				Title:     event.Title,
+				ShortDesc: event.ShortDesc,
+				LongDesc:  event.LongDesc,
+				Date:      event.Date.Format("2006:01:02"),
+				Time:      event.Time.Format("15:04"),
+				Organizer: event.Organizer,
+				Place:     event.Place,
+				Status:    event.Status,
+			})
+		}
 	}
+
 	data, _ := json.Marshal(eventsResponse)
 	return data
 }
 
-func GetEvent(id string) ([]byte, error) {
-	db := database.DbConnection()
+func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
+	db := database.PostgreSQL()
 	var event models.Event
 	db.Where("id = ?", id).First(&event)
 	if event.Id == 0 {
 		return []byte("Event not found"), nil
 	}
+
+	adminRequired := checkUserIsAdmin(claims)
+	if adminRequired == false && event.Status == "draft" {
+		return []byte("Only admins can see posts in draft status."), nil
+	}
+
 	data, _ := json.Marshal(models.EventResponse{
 		Id:        event.Id,
 		Title:     event.Title,
@@ -85,7 +97,7 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 		return []byte("Invalid time"), nil
 	}
 
-	db := database.DbConnection()
+	db := database.PostgreSQL()
 	db.Create(&models.Event{
 		Title:     event.Title,
 		ShortDesc: event.ShortDesc,
@@ -124,7 +136,7 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 	}
 
 	var eventDB models.Event
-	db := database.DbConnection()
+	db := database.PostgreSQL()
 	db.Where("id = ?", param).First(&eventDB)
 	if eventDB.Id == 0 {
 		return []byte("Invalid event"), nil
@@ -150,7 +162,7 @@ func DeleteEventService(claims map[string]interface{}, idDeleted string) ([]byte
 	}
 
 	var event models.Event
-	db := database.DbConnection()
+	db := database.PostgreSQL()
 	db.Where("id = ?", idDeleted).First(&event)
 	if event.Id == 0 {
 		return []byte("Invalid event"), nil

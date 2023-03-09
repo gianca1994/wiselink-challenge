@@ -7,7 +7,7 @@ import (
 )
 
 func GetProfileService(claims map[string]interface{}) []byte {
-	db := database.DbConnection()
+	db := database.PostgreSQL()
 	var user models.User
 	var userResponse models.UserProfileResponse
 

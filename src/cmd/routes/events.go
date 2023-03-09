@@ -19,17 +19,17 @@ func handlerTokenClaims(w http.ResponseWriter, r *http.Request) jwt.MapClaims {
 }
 
 func GetEvents(w http.ResponseWriter, r *http.Request) {
-	handlerTokenClaims(w, r)
+	claims := handlerTokenClaims(w, r)
 
-	data := service.GetEventsService()
+	data := service.GetEventsService(claims)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
 }
 
 func GetEvent(w http.ResponseWriter, r *http.Request) {
-	handlerTokenClaims(w, r)
+	claims := handlerTokenClaims(w, r)
 
-	data, _ := service.GetEvent(chi.URLParam(r, "id"))
+	data, _ := service.GetEvent(claims, chi.URLParam(r, "id"))
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
 }
