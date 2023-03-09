@@ -4,11 +4,11 @@ import (
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/golang-jwt/jwt"
 	"log"
+	"os"
+	"strconv"
 	"time"
 	"wiselink-challenge/src/models"
 )
-
-const secretJWTKey = "e18924e1982e4wqa4sd89asd"
 
 func GenerateToken(user models.User) string {
 	claims := jwt.MapClaims{
@@ -16,14 +16,15 @@ func GenerateToken(user models.User) string {
 		"username": user.Username,
 		"admin":    user.Admin,
 	}
-	jwtauth.SetExpiry(claims, time.Now().Add(time.Minute*60))
+	JWT_TIME_EXPIRE, _ := strconv.Atoi(os.Getenv("JWT_TIME_EXPIRE"))
+	jwtauth.SetExpiry(claims, time.Now().Add(time.Minute*time.Duration(JWT_TIME_EXPIRE)))
 	jwtauth.SetIssuedAt(claims, time.Now())
-	_, token, _ := jwtauth.New("HS512", []byte(secretJWTKey), nil).Encode(claims)
+	_, token, _ := jwtauth.New("HS512", []byte(os.Getenv("JWT_SECRET")), nil).Encode(claims)
 	return token
 }
 
 func ExtractClaims(tokenStr string) (jwt.MapClaims, bool) {
-	hmacSecret := []byte(secretJWTKey)
+	hmacSecret := []byte(os.Getenv("JWT_SECRET"))
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		return hmacSecret, nil
 	})
