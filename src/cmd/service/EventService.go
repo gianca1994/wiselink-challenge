@@ -12,7 +12,7 @@ import (
 	"wiselink-challenge/src/models"
 )
 
-func GetEventsService(claims map[string]interface{}) []byte {
+func GetEventsService(claims map[string]interface{}, filter string) []byte {
 	var eventsResponse []models.EventResponseProfileUser
 
 	events := repository.GetEvents()

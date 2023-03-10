@@ -20,8 +20,8 @@ func handlerTokenClaims(w http.ResponseWriter, r *http.Request) jwt.MapClaims {
 
 func GetEvents(w http.ResponseWriter, r *http.Request) {
 	claims := handlerTokenClaims(w, r)
-
-	data := service.GetEventsService(claims)
+	filter := r.URL.Query().Get("filter")
+	data := service.GetEventsService(claims, filter)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
 }
