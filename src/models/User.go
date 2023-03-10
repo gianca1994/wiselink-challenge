@@ -15,9 +15,10 @@ type User struct {
 }
 
 type UserProfileResponse struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Admin    bool   `json:"admin"`
+	Username string                     `json:"username"`
+	Email    string                     `json:"email"`
+	Admin    bool                       `json:"admin"`
+	Events   []EventResponseProfileUser `json:"events"`
 }
 
 type UserEventResponse struct {
