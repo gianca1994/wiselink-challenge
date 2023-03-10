@@ -35,6 +35,7 @@ func routerHandler() http.Handler {
 
 	r.Route("/users", func(r chi.Router) {
 		r.Get("/profile", routes.GetProfile)
+		r.Post("/register-event/{event_id}", routes.RegisterToEvent)
 	})
 
 	r.Route("/events", func(r chi.Router) {

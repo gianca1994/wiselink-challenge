@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/jwtauth/v5"
 	"net/http"
 	"wiselink-challenge/src/cmd/service"
@@ -18,4 +19,14 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
+}
+
+func RegisterToEvent(w http.ResponseWriter, r *http.Request) {
+	claims := jwt_auth.TokenGetClaims(jwtauth.TokenFromHeader(r))
+
+	if claims == nil {
+		_, _ = w.Write([]byte("Invalid token"))
+		return
+	}
+	service.RegisterToEvent(claims, chi.URLParam(r, "event_id"))
 }
