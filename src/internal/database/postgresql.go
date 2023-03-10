@@ -9,7 +9,7 @@ import (
 	"wiselink-challenge/src/models"
 )
 
-func PostgreSQL() *gorm.DB {
+func PostgreSQL() (*gorm.DB, error) {
 	dbHost := os.Getenv("DB_HOST")
 	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
 	dbUser := os.Getenv("DB_USER")
@@ -25,11 +25,16 @@ func PostgreSQL() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	return db
+	return db, nil
 }
 
 func Migrate() {
-	db := PostgreSQL()
+	db, err := PostgreSQL()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Statement.Context.Done()
+
 	err_user := db.AutoMigrate(&models.User{})
 	if err_user != nil {
 		return
@@ -37,5 +42,9 @@ func Migrate() {
 	err_event := db.AutoMigrate(&models.Event{})
 	if err_event != nil {
 		return
+	}
+
+	if sqlDB, err := db.DB(); err != nil {
+		_ = sqlDB.Close()
 	}
 }

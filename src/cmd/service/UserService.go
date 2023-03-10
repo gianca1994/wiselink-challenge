@@ -8,7 +8,7 @@ import (
 )
 
 func GetProfileService(claims map[string]interface{}) []byte {
-	db := database.PostgreSQL()
+	db, _ := database.PostgreSQL()
 	var user models.User
 	var userResponse models.UserProfileResponse
 	var eventsResponse []models.EventResponseProfileUser
@@ -40,7 +40,7 @@ func GetProfileService(claims map[string]interface{}) []byte {
 }
 
 func GetRegisteredEvents(claims map[string]interface{}, filter string) []byte {
-	db := database.PostgreSQL()
+	db, _ := database.PostgreSQL()
 	var user models.User
 	var eventsResponse []models.EventResponseProfileUser
 
@@ -100,7 +100,7 @@ func GetRegisteredEvents(claims map[string]interface{}, filter string) []byte {
 }
 
 func RegisterToEvent(claims map[string]interface{}, event_id string) []byte {
-	db := database.PostgreSQL()
+	db, _ := database.PostgreSQL()
 	var user models.User
 	var event models.Event
 	db.Where("username = ?", claims["username"]).First(&user)

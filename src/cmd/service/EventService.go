@@ -50,7 +50,7 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 		return []byte("Only admins can see posts in draft status."), nil
 	}
 
-	db := database.PostgreSQL()
+	db, _ := database.PostgreSQL()
 	_ = db.Model(&event).Association("Users").Find(&event.Users)
 
 	var usersResponse []models.UserEventResponse

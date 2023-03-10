@@ -4,33 +4,24 @@ import (
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"wiselink-challenge/src/internal/database"
+	"wiselink-challenge/src/cmd/repository"
 	jwt_auth "wiselink-challenge/src/internal/jwt"
 	"wiselink-challenge/src/models"
 )
 
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(bytes), err
-}
-
-func CheckPasswordHash(hash, password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
-}
-
 func Login(w http.ResponseWriter, r *http.Request) {
-	db := database.PostgreSQL()
-
 	var UserLoginDTO models.UserLoginDTO
-	_ = json.NewDecoder(r.Body).Decode(&UserLoginDTO)
-
 	var userDB models.User
-	db.Where("username = ?", UserLoginDTO.Username).First(&userDB)
 
-	if CheckPasswordHash(userDB.Password, UserLoginDTO.Password) {
+	_ = json.NewDecoder(r.Body).Decode(&UserLoginDTO)
+	userDB, err := repository.GetUserByUsername(UserLoginDTO.Username)
+	if err != nil {
+		_, _ = w.Write([]byte("User not found"))
+		return
+	}
+
+	if checkPasswordHash(userDB.Password, UserLoginDTO.Password) {
 		token := jwt_auth.GenerateToken(userDB)
-
 		data, _ := json.Marshal(map[string]string{
 			"token": token,
 		})
@@ -38,25 +29,47 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write(data)
 	} else {
-		_, _ = w.Write([]byte("Invalid username or password"))
+		_, _ = w.Write([]byte("Invalid password"))
 	}
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-
 	var user models.User
 	var UserRegisterDTO models.UserRegisterDTO
 
 	_ = json.NewDecoder(r.Body).Decode(&UserRegisterDTO)
-
 	user.Username = UserRegisterDTO.Username
 	user.Email = UserRegisterDTO.Email
-	hash, _ := HashPassword(UserRegisterDTO.Password)
+	hash, _ := hashPassword(UserRegisterDTO.Password)
 	user.Password = hash
 	user.Admin = false
 
-	db := database.PostgreSQL()
-	db.Create(&user)
+	checkUserByUsernameExists, _ := repository.GetUserByUsername(user.Username)
+	if checkUserByUsernameExists.Username != "" {
+		_, _ = w.Write([]byte("User already exists"))
+		return
+	}
 
+	checkUserByEmailExists, _ := repository.GetUserByEmail(user.Email)
+	if checkUserByEmailExists.Email != "" {
+		_, _ = w.Write([]byte("Email already in use"))
+		return
+	}
+
+	user, err := repository.CreateUser(user)
+	if err != nil {
+		_, _ = w.Write([]byte("Error creating user"))
+		return
+	}
 	_, _ = w.Write([]byte("User created successfully"))
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+func checkPasswordHash(hash, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
