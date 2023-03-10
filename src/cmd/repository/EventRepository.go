@@ -6,25 +6,52 @@ import (
 	"wiselink-challenge/src/models"
 )
 
-func CheckUserIsAdmin(claims map[string]interface{}) bool {
-	db, _ := database.PostgreSQL()
+func CheckUserIsAdmin(claims map[string]interface{}) (bool, error) {
 	var user models.User
+	db, _ := database.PostgreSQL()
+	defer db.Statement.Context.Done()
+
 	db.Where("username = ?", claims["username"]).First(&user)
-	return user.Admin
+	if sqlDB, err := db.DB(); err != nil {
+		_ = sqlDB.Close()
+	}
+	return user.Admin, nil
 }
 
-func GetEvents() []models.Event {
-	db, _ := database.PostgreSQL()
+func GetEvents() ([]models.Event, error) {
 	var events []models.Event
+	db, err := database.PostgreSQL()
+	if err != nil {
+		return events, err
+	}
+	defer db.Statement.Context.Done()
 	db.Find(&events)
-	return events
+	if sqlDB, err := db.DB(); err != nil {
+		_ = sqlDB.Close()
+	}
+	if err != nil {
+		return events, err
+	}
+	return events, nil
 }
 
-func GetEvent(id string) models.Event {
-	db, _ := database.PostgreSQL()
+func GetEvent(id string) (models.Event, error) {
 	var event models.Event
+	db, err := database.PostgreSQL()
+	if err != nil {
+		return event, err
+	}
+	defer db.Statement.Context.Done()
+
 	db.Where("id = ?", id).First(&event)
-	return event
+
+	if sqlDB, err := db.DB(); err != nil {
+		_ = sqlDB.Close()
+	}
+	if err != nil {
+		return event, err
+	}
+	return event, nil
 }
 
 func CreateEvent(event models.EventCreate, dateEvent, timeEvent time.Time) ([]byte, error) {

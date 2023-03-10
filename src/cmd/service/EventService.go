@@ -15,8 +15,8 @@ import (
 func GetEventsService(claims map[string]interface{}, filter string) []byte {
 	var eventsResponse []models.EventResponseProfileUser
 
-	events := repository.GetEvents()
-	adminRequired := repository.CheckUserIsAdmin(claims)
+	events, _ := repository.GetEvents()
+	adminRequired, _ := repository.CheckUserIsAdmin(claims)
 	for _, event := range events {
 		if adminRequired || event.Status != "draft" {
 			eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
@@ -40,12 +40,12 @@ func GetEventsService(claims map[string]interface{}, filter string) []byte {
 }
 
 func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
-	event := repository.GetEvent(id)
+	event, _ := repository.GetEvent(id)
 	if event.Id == 0 {
 		return []byte("Event not found"), nil
 	}
 
-	adminRequired := repository.CheckUserIsAdmin(claims)
+	adminRequired, _ := repository.CheckUserIsAdmin(claims)
 	if adminRequired == false && event.Status == "draft" {
 		return []byte("Only admins can see posts in draft status."), nil
 	}
@@ -77,7 +77,7 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 }
 
 func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte, error) {
-	adminRequired := repository.CheckUserIsAdmin(claims)
+	adminRequired, _ := repository.CheckUserIsAdmin(claims)
 	if adminRequired == false {
 		return []byte("Unauthorized"), nil
 	}
@@ -106,7 +106,7 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 }
 
 func UpdateEventService(claims map[string]interface{}, param string, r *http.Request) ([]byte, error) {
-	adminRequired := repository.CheckUserIsAdmin(claims)
+	adminRequired, _ := repository.CheckUserIsAdmin(claims)
 	if adminRequired == false {
 		return []byte("Unauthorized"), nil
 	}
@@ -135,7 +135,7 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 }
 
 func DeleteEventService(claims map[string]interface{}, idDeleted string) ([]byte, error) {
-	adminRequired := repository.CheckUserIsAdmin(claims)
+	adminRequired, _ := repository.CheckUserIsAdmin(claims)
 	if adminRequired == false {
 		return []byte("Unauthorized"), nil
 	}
