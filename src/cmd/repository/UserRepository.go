@@ -57,3 +57,21 @@ func GetUserByEmail(email string) (models.User, error) {
 	}
 	return user, nil
 }
+
+func GetRegisteredEvents(userId uint) ([]models.Event, error) {
+	var events []models.Event
+	db, err := database.PostgreSQL()
+	if err != nil {
+		return events, err
+	}
+	defer db.Statement.Context.Done()
+
+	err = db.Model(&models.User{Id: userId}).Association("Events").Find(&events)
+	if sqlDB, err := db.DB(); err != nil {
+		_ = sqlDB.Close()
+	}
+	if err != nil {
+		return events, err
+	}
+	return events, nil
+}

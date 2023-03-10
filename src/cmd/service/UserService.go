@@ -3,23 +3,26 @@ package service
 import (
 	"encoding/json"
 	"time"
+	"wiselink-challenge/src/cmd/repository"
 	"wiselink-challenge/src/internal/database"
 	"wiselink-challenge/src/models"
 )
 
 func GetProfileService(claims map[string]interface{}) []byte {
-	db, _ := database.PostgreSQL()
+	//db, _ := database.PostgreSQL()
 	var user models.User
 	var userResponse models.UserProfileResponse
 	var eventsResponse []models.EventResponseProfileUser
 
-	db.Where("username = ?", claims["username"]).First(&user)
-
+	//db.Where("username = ?", claims["username"]).First(&user)
+	user, _ = repository.GetUserByUsername(claims["username"].(string))
 	userResponse.Username = user.Username
 	userResponse.Email = user.Email
 	userResponse.Admin = user.Admin
 
-	_ = db.Model(&user).Association("Events").Find(&user.Events)
+	user.Events, _ = repository.GetRegisteredEvents(user.Id)
+
+	//_ = db.Model(&user).Association("Events").Find(&user.Events)
 
 	for _, event := range user.Events {
 		eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
