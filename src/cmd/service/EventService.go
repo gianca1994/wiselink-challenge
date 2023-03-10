@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"time"
 	"wiselink-challenge/src/cmd/repository"
+	"wiselink-challenge/src/internal/database"
 
 	_ "github.com/jackc/pgx/v5/pgtype"
 	"net/http"
@@ -49,6 +50,17 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 		return []byte("Only admins can see posts in draft status."), nil
 	}
 
+	db := database.PostgreSQL()
+	_ = db.Model(&event).Association("Users").Find(&event.Users)
+	
+	var usersResponse []models.UserEventResponse
+	for _, user := range event.Users {
+		usersResponse = append(usersResponse, models.UserEventResponse{
+			Username: user.Username,
+			Email:    user.Email,
+		})
+	}
+
 	data, _ := json.Marshal(models.EventResponse{
 		Id:        event.Id,
 		Title:     event.Title,
@@ -59,6 +71,7 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 		Organizer: event.Organizer,
 		Place:     event.Place,
 		Status:    event.Status,
+		Users:     usersResponse,
 	})
 	return data, nil
 }

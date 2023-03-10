@@ -11,14 +11,18 @@ type User struct {
 	Email    string  `gorm:"uniqueIndex not null"`
 	Password string  `gorm:"not null"`
 	Admin    bool    `gorm:"not null"`
-	Events   []Event `gorm:"many2many:user_events"`
+	Events   []Event `gorm:"many2many:event_users"`
 }
 
 type UserProfileResponse struct {
-	Username string          `json:"username"`
-	Email    string          `json:"email"`
-	Admin    bool            `json:"admin"`
-	Events   []EventResponse `json:"events"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Admin    bool   `json:"admin"`
+}
+
+type UserEventResponse struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 type UserRegisterDTO struct {

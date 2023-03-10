@@ -16,19 +16,20 @@ type Event struct {
 	Organizer string    `gorm:"not null"`
 	Place     string    `gorm:"not null"`
 	Status    string    `gorm:"not null"`
-	Users     []User    `gorm:"many2many:user_events"`
+	Users     []User    `gorm:"many2many:event_users"`
 }
 
 type EventResponse struct {
-	Id        uint   `json:"id"`
-	Title     string `json:"title"`
-	ShortDesc string `json:"short_desc"`
-	LongDesc  string `json:"long_desc"`
-	Date      string `json:"date"`
-	Time      string `json:"time"`
-	Organizer string `json:"organizer"`
-	Place     string `json:"place"`
-	Status    string `json:"status"`
+	Id        uint                `json:"id"`
+	Title     string              `json:"title"`
+	ShortDesc string              `json:"short_desc"`
+	LongDesc  string              `json:"long_desc"`
+	Date      string              `json:"date"`
+	Time      string              `json:"time"`
+	Organizer string              `json:"organizer"`
+	Place     string              `json:"place"`
+	Status    string              `json:"status"`
+	Users     []UserEventResponse `json:"users"`
 }
 
 type EventCreate struct {
