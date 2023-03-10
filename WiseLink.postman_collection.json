@@ -45,7 +45,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"gianca\",\r\n    \"password\": \"test\"\r\n}",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -80,7 +80,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODI2MjI2MCwiaWF0IjoxNjc4MjYyMjAwLCJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImdpYW5jYSJ9.aur_g9CrrXh0mD9MglwXjEL1XQg_Zl-QiMT4GFlM86RhNuMEkwJW2GZGts0cZmtF_bqvn1ccQJR04uvaS0Vtlg",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
 									"type": "string"
 								}
 							]
@@ -101,6 +101,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Register in Event",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/register-event/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"register-event",
+								"4"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -115,7 +146,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4MzY5NjEwLCJpYXQiOjE2NzgzNjYwMTAsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoiZ2lhbmNhIn0.Zj3nyzSeW9QTghw-u3I9Sz-zZusZGctnHlkQgE1EuAWfGdN7d0No2-viiX7e5umuC3ujbAk9ui9IX5kB7D1opQ",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
 									"type": "string"
 								}
 							]
@@ -144,7 +175,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4MzY5NjEwLCJpYXQiOjE2NzgzNjYwMTAsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoiZ2lhbmNhIn0.Zj3nyzSeW9QTghw-u3I9Sz-zZusZGctnHlkQgE1EuAWfGdN7d0No2-viiX7e5umuC3ujbAk9ui9IX5kB7D1opQ",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
 									"type": "string"
 								}
 							]
@@ -153,7 +184,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"test\",\r\n    \"short_desc\": \"test\",\r\n    \"long_desc\": \"test\",\r\n    \"date\": \"2023-04-30\",\r\n    \"time\": \"22:00\",\r\n    \"organizer\": \"test\",\r\n    \"place\": \"test\"\r\n}",
+							"raw": "{\r\n    \"title\": \"test\",\r\n    \"short_desc\": \"test\",\r\n    \"long_desc\": \"test\",\r\n    \"date\": \"2024-10-31\",\r\n    \"time\": \"23:00\",\r\n    \"organizer\": \"test\",\r\n    \"place\": \"test\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -212,7 +243,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4MzY4OTQxLCJpYXQiOjE2NzgzNjUzNDEsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoiZ2lhbmNhIn0.BYZzDwTtw80A2R89p0LwFyh2Kk58jmN2VQC4OdZyd71GiVnQnrX7HYNgDdmgZrqKChmOOOxwuK2P7Y1pndPicQ",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
 									"type": "string"
 								}
 							]
@@ -220,7 +251,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/events/3",
+							"raw": "http://localhost:8080/events/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -228,7 +259,7 @@
 							"port": "8080",
 							"path": [
 								"events",
-								"3"
+								"4"
 							]
 						}
 					},
