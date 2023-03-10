@@ -13,13 +13,13 @@ import (
 )
 
 func GetEventsService(claims map[string]interface{}) []byte {
-	var eventsResponse []models.EventResponse
+	var eventsResponse []models.EventResponseProfileUser
 
 	events := repository.GetEvents()
 	adminRequired := repository.CheckUserIsAdmin(claims)
 	for _, event := range events {
 		if adminRequired || event.Status != "draft" {
-			eventsResponse = append(eventsResponse, models.EventResponse{
+			eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
 				Id:        event.Id,
 				Title:     event.Title,
 				ShortDesc: event.ShortDesc,

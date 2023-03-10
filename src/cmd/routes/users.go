@@ -28,5 +28,7 @@ func RegisterToEvent(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("Invalid token"))
 		return
 	}
-	service.RegisterToEvent(claims, chi.URLParam(r, "event_id"))
+	response := service.RegisterToEvent(claims, chi.URLParam(r, "event_id"))
+	w.Header().Set("Content-Type", "application/json")
+	_, _ = w.Write(response)
 }
