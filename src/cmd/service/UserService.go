@@ -11,28 +11,12 @@ import (
 func GetProfileService(claims map[string]interface{}) []byte {
 	var user models.User
 	var userResponse models.UserProfileResponse
-	var eventsResponse []models.EventResponseProfileUser
 
 	user, _ = repository.GetUserByUsername(claims["username"].(string))
 	userResponse.Username = user.Username
 	userResponse.Email = user.Email
 	userResponse.Admin = user.Admin
-	user.Events, _ = repository.GetRegisteredEvents(user.Id)
-
-	for _, event := range user.Events {
-		eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
-			Id:        event.Id,
-			Title:     event.Title,
-			ShortDesc: event.ShortDesc,
-			LongDesc:  event.LongDesc,
-			Date:      event.Date.Format("2006-01-02"),
-			Time:      event.Time.Format("15:04"),
-			Organizer: event.Organizer,
-			Place:     event.Place,
-			Status:    event.Status,
-		})
-	}
-	userResponse.Events = eventsResponse
+	
 	data, _ := json.Marshal(userResponse)
 	return data
 }
@@ -76,7 +60,7 @@ func eventIsCompleted(event models.Event) bool {
 	if event.Status != "active" {
 		return false
 	}
-	
+
 	eventTime := time.Date(event.Date.Year(), event.Date.Month(), event.Date.Day(), event.Time.Hour(), event.Time.Minute(), 0, 0, time.UTC)
 	now := time.Now().UTC()
 	return eventTime.Before(now)
