@@ -13,7 +13,7 @@ func CreateUser(user models.User) (models.User, error) {
 	defer db.Statement.Context.Done()
 
 	err = db.Create(&user).Error
-	if sqlDB, err := db.DB(); err != nil {
+	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()
 	}
 	if err != nil {
@@ -31,7 +31,7 @@ func GetUserByUsername(username string) (models.User, error) {
 	defer db.Statement.Context.Done()
 
 	err = db.Where("username = ?", username).First(&user).Error
-	if sqlDB, err := db.DB(); err != nil {
+	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()
 	}
 	if err != nil {
@@ -49,7 +49,7 @@ func GetUserByEmail(email string) (models.User, error) {
 	defer db.Statement.Context.Done()
 
 	err = db.Where("email = ?", email).First(&user).Error
-	if sqlDB, err := db.DB(); err != nil {
+	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()
 	}
 	if err != nil {
@@ -67,7 +67,7 @@ func GetRegisteredEvents(userId uint) ([]models.Event, error) {
 	defer db.Statement.Context.Done()
 
 	err = db.Model(&models.User{Id: userId}).Association("Events").Find(&events)
-	if sqlDB, err := db.DB(); err != nil {
+	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()
 	}
 	if err != nil {

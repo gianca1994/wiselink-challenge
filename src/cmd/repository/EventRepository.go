@@ -12,7 +12,7 @@ func CheckUserIsAdmin(claims map[string]interface{}) (bool, error) {
 	defer db.Statement.Context.Done()
 
 	db.Where("username = ?", claims["username"]).First(&user)
-	if sqlDB, err := db.DB(); err != nil {
+	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()
 	}
 	return user.Admin, nil
@@ -26,7 +26,7 @@ func GetEvents() ([]models.Event, error) {
 	}
 	defer db.Statement.Context.Done()
 	db.Find(&events)
-	if sqlDB, err := db.DB(); err != nil {
+	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()
 	}
 	if err != nil {
@@ -45,7 +45,7 @@ func GetEvent(id string) (models.Event, error) {
 
 	db.Where("id = ?", id).First(&event)
 
-	if sqlDB, err := db.DB(); err != nil {
+	if sqlDB, err := db.DB(); err == nil {
 		_ = sqlDB.Close()
 	}
 	if err != nil {
