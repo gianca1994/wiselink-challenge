@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\",\r\n    \"email\": \"test@gmail.com\" \r\n}",
+							"raw": "{\r\n    \"username\": \"asdasd\",\r\n    \"password\": \"test\",\r\n    \"email\": \"test@gmail.com\" \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,13 +24,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/auth/register",
+							"raw": "http://localhost:8080/api/v1/auth/register",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"auth",
 								"register"
 							]
@@ -53,13 +55,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/auth/login",
+							"raw": "http://localhost:8080/api/v1/auth/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"auth",
 								"login"
 							]
@@ -80,7 +84,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODQ1Mjc1NSwiaWF0IjoxNjc4NDQ5MTU1LCJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InRlc3QyIn0.QElJX_PbTlq0O2TY5PWLxZDvBbDGv04ikBpTGoeDOSVxdh7ZrL6PVjP4nJ9LEOr7Q4oreLQxLbz6EKuQ9wRuPA",
 									"type": "string"
 								}
 							]
@@ -88,13 +92,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/profile",
+							"raw": "http://localhost:8080/api/v1/users/profile",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"users",
 								"profile"
 							]
@@ -110,7 +116,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODQ1Mjc1NSwiaWF0IjoxNjc4NDQ5MTU1LCJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InRlc3QyIn0.QElJX_PbTlq0O2TY5PWLxZDvBbDGv04ikBpTGoeDOSVxdh7ZrL6PVjP4nJ9LEOr7Q4oreLQxLbz6EKuQ9wRuPA",
 									"type": "string"
 								}
 							]
@@ -118,16 +124,56 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/register-event/4",
+							"raw": "http://localhost:8080/api/v1/users/register-event/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"users",
 								"register-event",
-								"4"
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Events registered",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODQ1Mjc1NSwiaWF0IjoxNjc4NDQ5MTU1LCJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InRlc3QyIn0.QElJX_PbTlq0O2TY5PWLxZDvBbDGv04ikBpTGoeDOSVxdh7ZrL6PVjP4nJ9LEOr7Q4oreLQxLbz6EKuQ9wRuPA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/users/registered-events?filter=completed",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"registered-events"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "completed"
+								}
 							]
 						}
 					},
@@ -146,7 +192,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDQ5OTAyLCJpYXQiOjE2Nzg0NDYzMDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.oWNHs3X40eA3pYHh62BURq69m17cdb0GlpYC2rKwLJyUEWWEK2jeH_wCtjRDgCohtvQrs16K4ctP2lG5kHc0JQ",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODQ1Mjc1NSwiaWF0IjoxNjc4NDQ5MTU1LCJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InRlc3QyIn0.QElJX_PbTlq0O2TY5PWLxZDvBbDGv04ikBpTGoeDOSVxdh7ZrL6PVjP4nJ9LEOr7Q4oreLQxLbz6EKuQ9wRuPA",
 									"type": "string"
 								}
 							]
@@ -154,13 +200,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/events",
+							"raw": "http://localhost:8080/api/v1/events",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"events"
 							]
 						}
@@ -192,13 +240,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/events",
+							"raw": "http://localhost:8080/api/v1/events",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"events"
 							]
 						}
@@ -221,13 +271,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/events/2",
+							"raw": "http://localhost:8080/api/v1/events/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"events",
 								"2"
 							]
@@ -251,13 +303,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/events/4",
+							"raw": "http://localhost:8080/api/v1/events/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"events",
 								"4"
 							]
@@ -290,13 +344,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/events/1",
+							"raw": "http://localhost:8080/api/v1/events/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"api",
+								"v1",
 								"events",
 								"1"
 							]
