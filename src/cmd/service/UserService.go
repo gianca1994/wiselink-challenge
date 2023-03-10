@@ -38,63 +38,62 @@ func GetProfileService(claims map[string]interface{}) []byte {
 }
 
 func GetRegisteredEvents(claims map[string]interface{}, filter string) []byte {
-	db, _ := database.PostgreSQL()
 	var user models.User
 	var eventsResponse []models.EventResponseProfileUser
 
-	db.Where("username = ?", claims["username"]).First(&user)
-
-	_ = db.Model(&user).Association("Events").Find(&user.Events)
+	userIDInterface, _ := claims["user_id"]
+	userID, _ := userIDInterface.(float64)
+	user.Events, _ = repository.GetRegisteredEvents(uint(userID))
 
 	for _, event := range user.Events {
 		if filter == "completed" {
-			eventTime := time.Date(event.Date.Year(), event.Date.Month(), event.Date.Day(), event.Time.Hour(), event.Time.Minute(), 0, 0, time.UTC)
-			now := time.Now().UTC()
-			if eventTime.Before(now) {
-				eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
-					Id:        event.Id,
-					Title:     event.Title,
-					ShortDesc: event.ShortDesc,
-					LongDesc:  event.LongDesc,
-					Date:      event.Date.Format("2006-01-02"),
-					Time:      event.Time.Format("15:04"),
-					Organizer: event.Organizer,
-					Place:     event.Place,
-					Status:    event.Status,
-				})
+			if eventIsCompleted(event) {
+				eventsResponse = append(eventsResponse, createEventResponse(event))
 			}
 		} else if filter == "active" {
-			eventTime := time.Date(event.Date.Year(), event.Date.Month(), event.Date.Day(), event.Time.Hour(), event.Time.Minute(), 0, 0, time.UTC)
-			now := time.Now().UTC()
-			if eventTime.After(now) {
-				eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
-					Id:        event.Id,
-					Title:     event.Title,
-					ShortDesc: event.ShortDesc,
-					LongDesc:  event.LongDesc,
-					Date:      event.Date.Format("2006-01-02"),
-					Time:      event.Time.Format("15:04"),
-					Organizer: event.Organizer,
-					Place:     event.Place,
-					Status:    event.Status,
-				})
+			if eventIsActive(event) {
+				eventsResponse = append(eventsResponse, createEventResponse(event))
 			}
 		} else {
-			eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
-				Id:        event.Id,
-				Title:     event.Title,
-				ShortDesc: event.ShortDesc,
-				LongDesc:  event.LongDesc,
-				Date:      event.Date.Format("2006-01-02"),
-				Time:      event.Time.Format("15:04"),
-				Organizer: event.Organizer,
-				Place:     event.Place,
-				Status:    event.Status,
-			})
+			eventsResponse = append(eventsResponse, createEventResponse(event))
 		}
 	}
 	data, _ := json.Marshal(eventsResponse)
 	return data
+}
+
+func eventIsActive(event models.Event) bool {
+	if event.Status != "active" {
+		return false
+	}
+
+	eventTime := time.Date(event.Date.Year(), event.Date.Month(), event.Date.Day(), event.Time.Hour(), event.Time.Minute(), 0, 0, time.UTC)
+	now := time.Now().UTC()
+	return eventTime.After(now)
+}
+
+func eventIsCompleted(event models.Event) bool {
+	if event.Status != "active" {
+		return false
+	}
+	
+	eventTime := time.Date(event.Date.Year(), event.Date.Month(), event.Date.Day(), event.Time.Hour(), event.Time.Minute(), 0, 0, time.UTC)
+	now := time.Now().UTC()
+	return eventTime.Before(now)
+}
+
+func createEventResponse(event models.Event) models.EventResponseProfileUser {
+	return models.EventResponseProfileUser{
+		Id:        event.Id,
+		Title:     event.Title,
+		ShortDesc: event.ShortDesc,
+		LongDesc:  event.LongDesc,
+		Date:      event.Date.Format("2006-01-02"),
+		Time:      event.Time.Format("15:04"),
+		Organizer: event.Organizer,
+		Place:     event.Place,
+		Status:    event.Status,
+	}
 }
 
 func RegisterToEvent(claims map[string]interface{}, event_id string) []byte {
