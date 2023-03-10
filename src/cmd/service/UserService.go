@@ -16,7 +16,7 @@ func GetProfileService(claims map[string]interface{}) []byte {
 	userResponse.Username = user.Username
 	userResponse.Email = user.Email
 	userResponse.Admin = user.Admin
-	
+
 	data, _ := json.Marshal(userResponse)
 	return data
 }
@@ -71,10 +71,8 @@ func createEventResponse(event models.Event) models.EventResponseProfileUser {
 		Id:        event.Id,
 		Title:     event.Title,
 		ShortDesc: event.ShortDesc,
-		LongDesc:  event.LongDesc,
 		Date:      event.Date.Format("2006-01-02"),
 		Time:      event.Time.Format("15:04"),
-		Organizer: event.Organizer,
 		Place:     event.Place,
 		Status:    event.Status,
 	}

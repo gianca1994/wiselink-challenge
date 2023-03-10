@@ -23,10 +23,8 @@ func GetEventsService(claims map[string]interface{}, filter string) []byte {
 				Id:        event.Id,
 				Title:     event.Title,
 				ShortDesc: event.ShortDesc,
-				LongDesc:  event.LongDesc,
 				Date:      event.Date.Format("2006-01-02"),
 				Time:      event.Time.Format("15:04"),
-				Organizer: event.Organizer,
 				Place:     event.Place,
 				Status:    event.Status,
 			})
