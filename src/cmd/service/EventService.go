@@ -24,7 +24,7 @@ func GetEventsService(claims map[string]interface{}) []byte {
 				Title:     event.Title,
 				ShortDesc: event.ShortDesc,
 				LongDesc:  event.LongDesc,
-				Date:      event.Date.Format("2006:01:02"),
+				Date:      event.Date.Format("2006-01-02"),
 				Time:      event.Time.Format("15:04"),
 				Organizer: event.Organizer,
 				Place:     event.Place,
@@ -52,7 +52,7 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 
 	db := database.PostgreSQL()
 	_ = db.Model(&event).Association("Users").Find(&event.Users)
-	
+
 	var usersResponse []models.UserEventResponse
 	for _, user := range event.Users {
 		usersResponse = append(usersResponse, models.UserEventResponse{
@@ -66,7 +66,7 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 		Title:     event.Title,
 		ShortDesc: event.ShortDesc,
 		LongDesc:  event.LongDesc,
-		Date:      event.Date.Format("2006:01:02"),
+		Date:      event.Date.Format("2006-01-02"),
 		Time:      event.Time.Format("15:04"),
 		Organizer: event.Organizer,
 		Place:     event.Place,
@@ -90,8 +90,18 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 		return []byte("Invalid data"), nil
 	}
 
-	dateEvent, _ := time.Parse(time.RFC3339Nano, event.Date)
-	timeEvent, _ := time.Parse(time.RFC3339, event.Time)
+	dateFormat := "2006-01-02"
+	dateEvent, err := time.Parse(dateFormat, event.Date)
+	if err != nil {
+		return []byte("Invalid date format"), err
+	}
+
+	timeFormat := "15:04"
+	timeEvent, err := time.Parse(timeFormat, event.Time)
+	if err != nil {
+		return []byte("Invalid time format"), err
+	}
+
 	return repository.CreateEvent(event, dateEvent, timeEvent)
 }
 
@@ -109,8 +119,18 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 		return []byte("Invalid data"), nil
 	}
 
-	dateEvent, _ := time.Parse(time.RFC3339Nano, event.Date)
-	timeEvent, _ := time.Parse(time.RFC3339, event.Time)
+	dateFormat := "2006-01-02"
+	dateEvent, err := time.Parse(dateFormat, event.Date)
+	if err != nil {
+		return []byte("Invalid date format"), err
+	}
+
+	timeFormat := "15:04"
+	timeEvent, err := time.Parse(timeFormat, event.Time)
+	if err != nil {
+		return []byte("Invalid time format"), err
+	}
+
 	return repository.UpdateEvent(param, event, dateEvent, timeEvent)
 }
 
