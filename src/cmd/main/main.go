@@ -28,18 +28,18 @@ func routerHandler() http.Handler {
 
 	r.Get("/", routes.Home)
 
-	r.Route("/auth", func(r chi.Router) {
+	r.Route("/api/v1/auth", func(r chi.Router) {
 		r.Post("/login", routes.Login)
 		r.Post("/register", routes.Register)
 	})
 
-	r.Route("/users", func(r chi.Router) {
+	r.Route("api/v1/users", func(r chi.Router) {
 		r.Get("/profile", routes.GetProfile)
 		r.Post("/register-event/{event_id}", routes.RegisterToEvent)
 		r.Get("/registered-events", routes.GetRegisteredEvents)
 	})
 
-	r.Route("/events", func(r chi.Router) {
+	r.Route("api/v1/events", func(r chi.Router) {
 		r.Get("/", routes.GetEvents)
 		r.Get("/{id}", routes.GetEvent)
 

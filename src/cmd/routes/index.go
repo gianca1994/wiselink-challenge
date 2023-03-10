@@ -16,20 +16,22 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 func availableRoutes(port string) []byte {
 	routes_auth, _ := json.Marshal(map[string]string{
-		"POST, Login":    "http://localhost:" + port + "/auth/login",
-		"POST, Register": "http://localhost:" + port + "/auth/register",
+		"POST, Login":    "http://localhost:" + port + "api/v1/auth/login",
+		"POST, Register": "http://localhost:" + port + "api/v1/auth/register",
 	})
 
 	routes_user, _ := json.Marshal(map[string]string{
-		"GET, Profile": "http://localhost:" + port + "/users/profile",
+		"GET, Profile":            "http://localhost:" + port + "api/v1/users/profile",
+		"POST, Register to event": "http://localhost:" + port + "api/v1/users/register-event/{event_id}",
+		"GET, Registered events":  "http://localhost:" + port + "api/v1/users/registered-events",
 	})
 
 	routes_event, _ := json.Marshal(map[string]string{
-		"GET, Events":   "http://localhost:" + port + "/events",
-		"GET, Event":    "http://localhost:" + port + "/events/{id}",
-		"POST, Event":   "http://localhost:" + port + "/events",
-		"PATCH, Event":  "http://localhost:" + port + "/events/{id}",
-		"DELETE, Event": "http://localhost:" + port + "/events/{id}",
+		"GET, Events":   "http://localhost:" + port + "api/v1/events",
+		"GET, Event":    "http://localhost:" + port + "api/v1/events/{id}",
+		"POST, Event":   "http://localhost:" + port + "api/v1/events",
+		"PATCH, Event":  "http://localhost:" + port + "api/v1/events/{id}",
+		"DELETE, Event": "http://localhost:" + port + "api/v1/events/{id}",
 	})
 
 	return []byte(`
