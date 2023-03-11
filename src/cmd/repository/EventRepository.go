@@ -10,11 +10,11 @@ func CheckUserIsAdmin(claims map[string]interface{}) (bool, error) {
 	var user models.User
 	db, _ := database.PostgreSQL()
 	defer db.Statement.Context.Done()
-
 	db.Where("username = ?", claims["username"]).First(&user)
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
 	return user.Admin, nil
 }
 
@@ -26,9 +26,10 @@ func GetEvents() ([]models.Event, error) {
 	}
 	defer db.Statement.Context.Done()
 	db.Find(&events)
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
 	if err != nil {
 		return events, err
 	}
@@ -42,12 +43,11 @@ func GetEvent(id string) (models.Event, error) {
 		return event, err
 	}
 	defer db.Statement.Context.Done()
-
 	db.Where("id = ?", id).First(&event)
 
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
 	if err != nil {
 		return event, err
 	}
@@ -66,6 +66,8 @@ func CreateEvent(event models.EventCreate, dateEvent, timeEvent time.Time) ([]by
 		Place:     event.Place,
 		Status:    "draft",
 	})
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
 	return []byte("Event created"), nil
 }
 
@@ -86,6 +88,8 @@ func UpdateEvent(param string, event models.EventUpdate, dateEvent, timeEvent ti
 		Place:     event.Place,
 		Status:    event.Status,
 	})
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
 	return []byte("Event updated"), nil
 }
 
@@ -97,5 +101,7 @@ func DeleteEvent(idDeleted string) ([]byte, error) {
 		return []byte("Invalid event"), nil
 	}
 	db.Delete(&event)
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
 	return []byte("Event deleted"), nil
 }

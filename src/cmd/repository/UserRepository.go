@@ -11,11 +11,11 @@ func CreateUser(user models.User) (models.User, error) {
 		return user, err
 	}
 	defer db.Statement.Context.Done()
-
 	err = db.Create(&user).Error
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
 	if err != nil {
 		return user, err
 	}
@@ -29,11 +29,11 @@ func GetUserByUsername(username string) (models.User, error) {
 		return user, err
 	}
 	defer db.Statement.Context.Done()
-
 	err = db.Where("username = ?", username).First(&user).Error
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
 	if err != nil {
 		return user, err
 	}
@@ -47,11 +47,11 @@ func GetUserByEmail(email string) (models.User, error) {
 		return user, err
 	}
 	defer db.Statement.Context.Done()
-
 	err = db.Where("email = ?", email).First(&user).Error
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
 	if err != nil {
 		return user, err
 	}
@@ -65,13 +65,30 @@ func GetRegisteredEvents(userId uint) ([]models.Event, error) {
 		return events, err
 	}
 	defer db.Statement.Context.Done()
-
 	err = db.Model(&models.User{Id: userId}).Association("Events").Find(&events)
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
 	if err != nil {
 		return events, err
 	}
 	return events, nil
+}
+
+func RegisterUserInEvent(user models.User, event models.Event) error {
+	db, err := database.PostgreSQL()
+	if err != nil {
+		return err
+	}
+	defer db.Statement.Context.Done()
+	err = db.Model(&user).Association("Events").Append(&event)
+
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
+
+	if err != nil {
+		return err
+	}
+	return nil
 }

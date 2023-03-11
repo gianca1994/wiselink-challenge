@@ -51,9 +51,8 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 	db, _ := database.PostgreSQL()
 	_ = db.Model(&event).Association("Users").Find(&event.Users)
 
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
 
 	var usersResponse []models.UserEventResponse
 	for _, user := range event.Users {

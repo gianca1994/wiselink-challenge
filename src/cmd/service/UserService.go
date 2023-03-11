@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"time"
 	"wiselink-challenge/src/cmd/repository"
-	"wiselink-challenge/src/internal/database"
 	"wiselink-challenge/src/models"
 )
 
@@ -79,11 +78,17 @@ func createEventResponse(event models.Event) models.EventResponseProfileUser {
 }
 
 func RegisterToEvent(claims map[string]interface{}, event_id string) []byte {
-	db, _ := database.PostgreSQL()
 	var user models.User
 	var event models.Event
-	db.Where("username = ?", claims["username"]).First(&user)
-	db.Where("id = ?", event_id).First(&event)
+
+	user, err := repository.GetUserByUsername(claims["username"].(string))
+	if err != nil {
+		return []byte("User not found")
+	}
+	event, err = repository.GetEvent(event_id)
+	if err != nil {
+		return []byte("Event not found")
+	}
 
 	eventTime := time.Date(event.Date.Year(), event.Date.Month(), event.Date.Day(), event.Time.Hour(), event.Time.Minute(), 0, 0, time.UTC)
 	now := time.Now().UTC()
@@ -91,9 +96,10 @@ func RegisterToEvent(claims map[string]interface{}, event_id string) []byte {
 		return []byte("Event has already started")
 	}
 
-	err := db.Model(&user).Association("Events").Append(&event)
+	err = repository.RegisterUserInEvent(user, event)
 	if err != nil {
 		return nil
 	}
+
 	return []byte("Registered to event")
 }

@@ -44,7 +44,6 @@ func Migrate() {
 		return
 	}
 
-	if sqlDB, err := db.DB(); err == nil {
-		_ = sqlDB.Close()
-	}
+	sqlDB, _ := db.DB()
+	_ = sqlDB.Close()
 }
