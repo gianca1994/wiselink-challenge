@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strconv"
 	"wiselink-challenge/src/cmd/repository"
 	jwt_auth "wiselink-challenge/src/internal/jwt"
 	"wiselink-challenge/src/models"
@@ -27,6 +28,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	token := jwt_auth.GenerateToken(userDB)
 	data, _ := json.Marshal(map[string]string{
 		"token": token,
+		"admin": strconv.FormatBool(userDB.Admin),
 	})
 
 	w.Header().Set("Content-Type", "application/json")

@@ -39,7 +39,6 @@ func GetEventsService(claims map[string]interface{}, filterSelected string, filt
 			}
 		}
 	}
-
 	filterFunc := applyFilter(filter)
 
 	for _, event := range events {
