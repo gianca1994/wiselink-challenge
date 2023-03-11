@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/golang-jwt/jwt"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -40,9 +41,10 @@ func ExtractClaims(tokenStr string) (jwt.MapClaims, bool) {
 	}
 }
 
-func TokenGetClaims(token string) jwt.MapClaims {
+func TokenGetClaims(token string, w http.ResponseWriter) jwt.MapClaims {
 	claims, _ := ExtractClaims(token)
 	if claims == nil {
+		_, _ = w.Write([]byte("Invalid token"))
 		return nil
 	}
 	return claims

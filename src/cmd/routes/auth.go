@@ -19,18 +19,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("User not found"))
 		return
 	}
-
-	if checkPasswordHash(userDB.Password, UserLoginDTO.Password) {
-		token := jwt_auth.GenerateToken(userDB)
-		data, _ := json.Marshal(map[string]string{
-			"token": token,
-		})
-
-		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write(data)
-	} else {
+	if !checkPasswordHash(userDB.Password, UserLoginDTO.Password) {
 		_, _ = w.Write([]byte("Invalid password"))
+		return
 	}
+
+	token := jwt_auth.GenerateToken(userDB)
+	data, _ := json.Marshal(map[string]string{
+		"token": token,
+	})
+
+	w.Header().Set("Content-Type", "application/json")
+	_, _ = w.Write(data)
+
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
