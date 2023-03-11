@@ -16,10 +16,10 @@ func main() {
 		fmt.Println("Error loading .env file")
 		os.Exit(0)
 	}
-
-	port := ":" + os.Getenv("API_PORT")
+	database.Init()
 	database.Migrate()
 
+	port := ":" + os.Getenv("API_PORT")
 	fmt.Printf("Starting server on %v\n", port)
 	_ = http.ListenAndServe(port, routerHandler())
 }
@@ -29,7 +29,7 @@ func routerHandler() http.Handler {
 
 	corsOrigin := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods: []string{"GET", "POST", "PATCH", "DELETE"},
 		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type"},
 		MaxAge:         300,
 	})
