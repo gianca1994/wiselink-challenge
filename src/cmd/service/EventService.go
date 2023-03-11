@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
 	"wiselink-challenge/src/cmd/repository"
 	"wiselink-challenge/src/internal/database"
@@ -12,24 +13,51 @@ import (
 	"wiselink-challenge/src/models"
 )
 
-func GetEventsService(claims map[string]interface{}, filter string) []byte {
+func GetEventsService(claims map[string]interface{}, filterSelected string, filter string) []byte {
 	var eventsResponse []models.EventResponseProfileUser
 
 	events, _ := repository.GetEvents()
 	adminRequired, _ := repository.CheckUserIsAdmin(claims)
-	for _, event := range events {
-		if adminRequired || event.Status != "draft" {
-			eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
-				Id:        event.Id,
-				Title:     event.Title,
-				ShortDesc: event.ShortDesc,
-				Date:      event.Date.Format("2006-01-02"),
-				Time:      event.Time.Format("15:04"),
-				Place:     event.Place,
-				Status:    event.Status,
-			})
+
+	applyFilter := func(filter string) func(event models.Event) bool {
+		switch filterSelected {
+		case "date":
+			return func(event models.Event) bool {
+				return event.Date.Format("2006-01-02") == filter
+			}
+		case "status":
+			return func(event models.Event) bool {
+				return event.Status == filter
+			}
+		case "title":
+			return func(event models.Event) bool {
+				return strings.Contains(strings.ToLower(event.Title), strings.ToLower(filter))
+			}
+		default:
+			return func(event models.Event) bool {
+				return true
+			}
 		}
 	}
+
+	filterFunc := applyFilter(filter)
+
+	for _, event := range events {
+		if adminRequired || event.Status != "draft" {
+			if filterFunc(event) {
+				eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
+					Id:        event.Id,
+					Title:     event.Title,
+					ShortDesc: event.ShortDesc,
+					Date:      event.Date.Format("2006-01-02"),
+					Time:      event.Time.Format("15:04"),
+					Place:     event.Place,
+					Status:    event.Status,
+				})
+			}
+		}
+	}
+
 	data, _ := json.Marshal(eventsResponse)
 	if len(eventsResponse) == 0 {
 		return []byte("[]")
