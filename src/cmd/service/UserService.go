@@ -89,11 +89,9 @@ func RegisterToEvent(claims map[string]interface{}, event_id string) []byte {
 	if err != nil {
 		return []byte("Event not found")
 	}
-
 	if event.Status != "active" {
 		return []byte("Event is not active")
 	}
-
 	eventTime := time.Date(event.Date.Year(), event.Date.Month(), event.Date.Day(), event.Time.Hour(), event.Time.Minute(), 0, 0, time.UTC)
 	now := time.Now().UTC()
 	if eventTime.Before(now) {
@@ -104,6 +102,5 @@ func RegisterToEvent(claims map[string]interface{}, event_id string) []byte {
 	if err != nil {
 		return nil
 	}
-
 	return []byte("Registered to event")
 }
