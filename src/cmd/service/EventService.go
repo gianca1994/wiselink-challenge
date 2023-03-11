@@ -92,19 +92,16 @@ func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte,
 		return []byte("Invalid data"), nil
 	}
 
-	dateFormat := "2006-01-02"
-	dateEvent, err := time.Parse(dateFormat, event.Date)
+	date, err := formatDate(event.Date)
 	if err != nil {
 		return []byte("Invalid date format"), err
 	}
-
-	timeFormat := "15:04"
-	timeEvent, err := time.Parse(timeFormat, event.Time)
+	timeEvent, err := formatTime(event.Time)
 	if err != nil {
 		return []byte("Invalid time format"), err
 	}
 
-	return repository.CreateEvent(event, dateEvent, timeEvent)
+	return repository.CreateEvent(event, date, timeEvent)
 }
 
 func UpdateEventService(claims map[string]interface{}, param string, r *http.Request) ([]byte, error) {
@@ -117,23 +114,22 @@ func UpdateEventService(claims map[string]interface{}, param string, r *http.Req
 	_ = json.NewDecoder(r.Body).Decode(&event)
 
 	if event.ShortDesc == "" || event.LongDesc == "" ||
-		event.Date == "" || event.Time == "" || event.Organizer == "" || event.Place == "" || event.Status == "" {
+		event.Date == "" || event.Time == "" || event.Organizer == "" ||
+		event.Place == "" || event.Status == "" {
 		return []byte("Invalid data"), nil
 	}
 
-	dateFormat := "2006-01-02"
-	dateEvent, err := time.Parse(dateFormat, event.Date)
+	date, err := formatDate(event.Date)
 	if err != nil {
 		return []byte("Invalid date format"), err
 	}
 
-	timeFormat := "15:04"
-	timeEvent, err := time.Parse(timeFormat, event.Time)
+	timeEvent, err := formatTime(event.Time)
 	if err != nil {
 		return []byte("Invalid time format"), err
 	}
 
-	return repository.UpdateEvent(param, event, dateEvent, timeEvent)
+	return repository.UpdateEvent(param, event, date, timeEvent)
 }
 
 func DeleteEventService(claims map[string]interface{}, idDeleted string) ([]byte, error) {
@@ -142,4 +138,16 @@ func DeleteEventService(claims map[string]interface{}, idDeleted string) ([]byte
 		return []byte("Unauthorized"), nil
 	}
 	return repository.DeleteEvent(idDeleted)
+}
+
+func formatDate(date string) (time.Time, error) {
+	dateFormat := "2006-01-02"
+	dateEvent, err := time.Parse(dateFormat, date)
+	return dateEvent, err
+}
+
+func formatTime(timeDate string) (time.Time, error) {
+	timeFormat := "15:04"
+	timeEvent, err := time.Parse(timeFormat, timeDate)
+	return timeEvent, err
 }
