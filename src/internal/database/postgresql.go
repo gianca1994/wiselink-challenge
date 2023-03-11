@@ -9,40 +9,29 @@ import (
 	"wiselink-challenge/src/models"
 )
 
-var (
-	dbHost    string
-	dbPort    int
-	dbUser    string
-	dbPass    string
-	dbName    string
-	dbSSLMode string
-)
+var psqlInfo string
 
 func Init() {
-	dbHost = os.Getenv("DB_HOST")
-	dbPort, _ = strconv.Atoi(os.Getenv("DB_PORT"))
-	dbUser = os.Getenv("DB_USER")
-	dbPass = os.Getenv("DB_PASSWORD")
-	dbName = os.Getenv("DB_NAME")
-	dbSSLMode = os.Getenv("DB_SSL_MODE")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbSSLMode := os.Getenv("DB_SSL_MODE")
+	psqlInfo = fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=%s",
+		dbHost, dbPort, dbUser, dbPass, dbName, dbSSLMode)
 }
 
 func PostgreSQL() (*gorm.DB, error) {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=%s",
-		dbHost, dbPort, dbUser, dbPass, dbName, dbSSLMode)
-
-	db, err := gorm.Open(postgres.Open(psqlInfo), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-	return db, nil
+	return gorm.Open(postgres.Open(psqlInfo), &gorm.Config{})
 }
 
 func Migrate() {
 	db, err := PostgreSQL()
 	if err != nil {
-		panic(err)
+		fmt.Println("Error connecting to database")
+		os.Exit(1)
 	}
 	defer db.Statement.Context.Done()
 
