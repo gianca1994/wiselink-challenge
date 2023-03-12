@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  app:
+    image: wise-link:latest
+    depends_on:
+      - postgreSQL
+    environment:
+      API_PORT: 8080
+      DB_HOST: postgreSQL
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: root
+      DB_NAME: wiselink
+      DB_SSL_MODE: disable
+      JWT_SECRET: secret
+      JWT_TIME_EXPIRE_MINUTES: 60
+    ports:
+      - "8080:8080"
+
+  postgreSQL:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: wiselink
+    ports:
+      - "5432:5432"
