@@ -14,53 +14,48 @@ import (
 )
 
 func GetEventsService(claims map[string]interface{}, filterSelected string, filter string) []byte {
-	var eventsResponse []models.EventResponseProfileUser
-
 	events, _ := repository.GetEvents()
 	adminRequired, _ := repository.CheckUserIsAdmin(claims)
 
-	applyFilter := func(filter string) func(event models.Event) bool {
-		switch filterSelected {
-		case "date":
-			return func(event models.Event) bool {
-				return event.Date.Format("2006-01-02") == filter
-			}
-		case "status":
-			return func(event models.Event) bool {
-				return event.Status == filter
-			}
-		case "title":
-			return func(event models.Event) bool {
-				return strings.Contains(strings.ToLower(event.Title), strings.ToLower(filter))
-			}
-		default:
-			return func(event models.Event) bool {
-				return true
-			}
-		}
+	filters := map[string]func(event models.Event) bool{
+		"date": func(event models.Event) bool {
+			return event.Date.Format("2006-01-02") == filter
+		},
+		"status": func(event models.Event) bool {
+			return event.Status == filter
+		},
+		"title": func(event models.Event) bool {
+			return strings.Contains(strings.ToLower(event.Title), strings.ToLower(filter))
+		},
+		"default": func(event models.Event) bool {
+			return true
+		},
 	}
-	filterFunc := applyFilter(filter)
+	filterFunc, ok := filters[filterSelected]
+	if !ok {
+		filterFunc = filters["default"]
+	}
 
+	var eventsResponse []models.EventResponseProfileUser
 	for _, event := range events {
-		if adminRequired || event.Status != "draft" {
-			if filterFunc(event) {
-				eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
-					Id:        event.Id,
-					Title:     event.Title,
-					ShortDesc: event.ShortDesc,
-					Date:      event.Date.Format("2006-01-02"),
-					Time:      event.Time.Format("15:04"),
-					Place:     event.Place,
-					Status:    event.Status,
-				})
-			}
+		if !adminRequired && event.Status == "draft" {
+			continue
 		}
+		if !filterFunc(event) {
+			continue
+		}
+		eventsResponse = append(eventsResponse, models.EventResponseProfileUser{
+			Id:        event.Id,
+			Title:     event.Title,
+			ShortDesc: event.ShortDesc,
+			Date:      event.Date.Format("2006-01-02"),
+			Time:      event.Time.Format("15:04"),
+			Place:     event.Place,
+			Status:    event.Status,
+		})
 	}
 
 	data, _ := json.Marshal(eventsResponse)
-	if len(eventsResponse) == 0 {
-		return []byte("[]")
-	}
 	return data
 }
 
