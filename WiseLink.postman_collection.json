@@ -84,7 +84,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDgxMTQyLCJpYXQiOjE2Nzg0Nzc1NDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.YaL_MBFwCUouilyvIlmwPT5hzI-9pmN5rB1p0YIZumsEjLsmtvhOPpQi-ns_VdgVIMZmHPiiCUDQZ8LKvfv8tw",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODU0OTExMCwiaWF0IjoxNjc4NTQ1NTEwLCJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImdpYW5jYSJ9.PhZ820oovPQJjGb1Ro1pmRqjEzN4_CeGtgDApBUhmvAzE_uuOmJ3SKFoGValQiX_nkVCS1zsLozDZsBw3cQIAw",
 									"type": "string"
 								}
 							]
@@ -116,7 +116,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDgxMTQyLCJpYXQiOjE2Nzg0Nzc1NDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.YaL_MBFwCUouilyvIlmwPT5hzI-9pmN5rB1p0YIZumsEjLsmtvhOPpQi-ns_VdgVIMZmHPiiCUDQZ8LKvfv8tw",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODU0OTExMCwiaWF0IjoxNjc4NTQ1NTEwLCJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImdpYW5jYSJ9.PhZ820oovPQJjGb1Ro1pmRqjEzN4_CeGtgDApBUhmvAzE_uuOmJ3SKFoGValQiX_nkVCS1zsLozDZsBw3cQIAw",
 									"type": "string"
 								}
 							]
@@ -124,7 +124,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v1/users/register-event/2",
+							"raw": "http://localhost:8080/api/v1/users/register-event/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -135,7 +135,7 @@
 								"v1",
 								"users",
 								"register-event",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -149,7 +149,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDkyMDU5LCJpYXQiOjE2Nzg0ODg0NTksInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.50GNu4SNlynzvSwNiEYgiPV-fPFfrRSIV1sxNYvldHsY0BKgKd-yC2LEwbYSRvumNap14JrbAelN60TZzYz5Zg",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODU0OTExMCwiaWF0IjoxNjc4NTQ1NTEwLCJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImdpYW5jYSJ9.PhZ820oovPQJjGb1Ro1pmRqjEzN4_CeGtgDApBUhmvAzE_uuOmJ3SKFoGValQiX_nkVCS1zsLozDZsBw3cQIAw",
 									"type": "string"
 								}
 							]
@@ -157,7 +157,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v1/users/registered-events",
+							"raw": "http://localhost:8080/api/v1/users/registered-events?filter=",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -168,6 +168,12 @@
 								"v1",
 								"users",
 								"registered-events"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -186,7 +192,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDkyMDU5LCJpYXQiOjE2Nzg0ODg0NTksInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.50GNu4SNlynzvSwNiEYgiPV-fPFfrRSIV1sxNYvldHsY0BKgKd-yC2LEwbYSRvumNap14JrbAelN60TZzYz5Zg",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6ZmFsc2UsImV4cCI6MTY3ODU0OTExMCwiaWF0IjoxNjc4NTQ1NTEwLCJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6ImdpYW5jYSJ9.PhZ820oovPQJjGb1Ro1pmRqjEzN4_CeGtgDApBUhmvAzE_uuOmJ3SKFoGValQiX_nkVCS1zsLozDZsBw3cQIAw",
 									"type": "string"
 								}
 							]
@@ -217,7 +223,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NDgxMTQyLCJpYXQiOjE2Nzg0Nzc1NDIsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.YaL_MBFwCUouilyvIlmwPT5hzI-9pmN5rB1p0YIZumsEjLsmtvhOPpQi-ns_VdgVIMZmHPiiCUDQZ8LKvfv8tw",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6dHJ1ZSwiZXhwIjoxNjc4NTUyODc5LCJpYXQiOjE2Nzg1NDkyNzksInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidGVzdCJ9.1EX8IQGvIYjPMHEnD9dHhbU8pugDk_fWWd8_gaNKdzk6YTh5ttWFMvxnU3_cp9gWSBL8G8uJGPdIJB_pJs5T6w",
 									"type": "string"
 								}
 							]
@@ -226,7 +232,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"test\",\r\n    \"short_desc\": \"test\",\r\n    \"long_desc\": \"test\",\r\n    \"date\": \"2024-10-31\",\r\n    \"time\": \"23:00\",\r\n    \"organizer\": \"test\",\r\n    \"place\": \"test\"\r\n}",
+							"raw": "{\r\n    \"title\": \"evento real\",\r\n    \"short_desc\": \"una descripcion corta\",\r\n    \"long_desc\": \"esta va a ser una descripcion mucho mas extensa, para cuando se inspecciona un evento\",\r\n    \"date\": \"2023-05-25\",\r\n    \"time\": \"23:00\",\r\n    \"organizer\": \"gianca\",\r\n    \"place\": \"Mendoza, Argentina\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
