@@ -4,13 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	_ "github.com/jackc/pgx/v5/pgtype"
+	"net/http"
 	"strings"
 	"time"
 	"wiselink-challenge/src/cmd/repository"
-	"wiselink-challenge/src/internal/database"
-
-	_ "github.com/jackc/pgx/v5/pgtype"
-	"net/http"
 
 	"wiselink-challenge/src/models"
 )
@@ -67,31 +65,20 @@ func GetEventsService(claims map[string]interface{}, filterSelected string, filt
 }
 
 func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
-	event, _ := repository.GetEvent(id)
-	if event.Id == 0 {
-		return []byte("Event not found"), nil
+	event, err := repository.GetEvent(id)
+	if err != nil {
+		return nil, err
 	}
-
 	adminRequired, _ := repository.CheckUserIsAdmin(claims)
-	if adminRequired == false && event.Status == "draft" {
+	if !adminRequired && event.Status == "draft" {
 		return []byte("Only admins can see posts in draft status."), nil
 	}
-
-	db, _ := database.PostgreSQL()
-	_ = db.Model(&event).Association("Users").Find(&event.Users)
-
-	sqlDB, _ := db.DB()
-	_ = sqlDB.Close()
-
-	var usersResponse []models.UserEventResponse
-	for _, user := range event.Users {
-		usersResponse = append(usersResponse, models.UserEventResponse{
-			Username: user.Username,
-			Email:    user.Email,
-		})
+	usersResponse, err := repository.GetUsersForEvent(&event)
+	if err != nil {
+		return nil, err
 	}
 
-	data, _ := json.Marshal(models.EventResponse{
+	return json.Marshal(models.EventResponse{
 		Id:        event.Id,
 		Title:     event.Title,
 		ShortDesc: event.ShortDesc,
@@ -103,7 +90,6 @@ func GetEvent(claims map[string]interface{}, id string) ([]byte, error) {
 		Status:    event.Status,
 		Users:     usersResponse,
 	})
-	return data, nil
 }
 
 func CreateEventService(claims map[string]interface{}, r *http.Request) ([]byte, error) {
@@ -196,4 +182,3 @@ func validateDataAndTime(event interface{}) error {
 
 	return nil
 }
-

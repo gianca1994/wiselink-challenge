@@ -54,6 +54,29 @@ func GetEvent(id string) (models.Event, error) {
 	return event, nil
 }
 
+func GetUsersForEvent(event *models.Event) ([]models.UserEventResponse, error) {
+	db, err := database.PostgreSQL()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Statement.Context.Done()
+
+	err = db.Model(&event).Association("Users").Find(&event.Users)
+	if err != nil {
+		return nil, err
+	}
+
+	var usersResponse []models.UserEventResponse
+	for _, user := range event.Users {
+		usersResponse = append(usersResponse, models.UserEventResponse{
+			Username: user.Username,
+			Email:    user.Email,
+		})
+	}
+
+	return usersResponse, nil
+}
+
 func CreateEvent(event models.EventCreate) ([]byte, error) {
 	db, _ := database.PostgreSQL()
 
