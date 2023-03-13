@@ -20,27 +20,8 @@ func handlerTokenClaims(w http.ResponseWriter, r *http.Request) jwt.MapClaims {
 func GetEvents(w http.ResponseWriter, r *http.Request) {
 	claims := handlerTokenClaims(w, r)
 
-	var filterSelected string
-	var filter string
-
-	filterDate := r.URL.Query().Get("date")
-	if filterDate != "" {
-		filter = filterDate
-		filterSelected = "date"
-	}
-	filterStatus := r.URL.Query().Get("status")
-	if filterStatus != "" {
-		filter = filterStatus
-		filterSelected = "status"
-	}
-	filterTitle := r.URL.Query().Get("title")
-	if filterTitle != "" {
-		filter = filterTitle
-		filterSelected = "title"
-	}
-
-	data := service.GetEventsService(claims, filterSelected, filter)
-
+	filterBy, filterValue := extractFilter(r)
+	data := service.GetEventsService(claims, filterBy, filterValue)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
 }
@@ -75,4 +56,29 @@ func DeleteEvent(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
+}
+
+///////////////////// Helpers //////////////////////
+
+func extractFilter(r *http.Request) (string, string) {
+	var filterSelected string
+	var filter string
+
+	filterDate := r.URL.Query().Get("date")
+	if filterDate != "" {
+		filter = filterDate
+		filterSelected = "date"
+	}
+	filterStatus := r.URL.Query().Get("status")
+	if filterStatus != "" {
+		filter = filterStatus
+		filterSelected = "status"
+	}
+	filterTitle := r.URL.Query().Get("title")
+	if filterTitle != "" {
+		filter = filterTitle
+		filterSelected = "title"
+	}
+
+	return filterSelected, filter
 }
