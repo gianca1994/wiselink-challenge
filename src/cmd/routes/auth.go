@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
-	"strconv"
 	"wiselink-challenge/src/cmd/repository"
 	jwt_auth "wiselink-challenge/src/internal/jwt"
 	"wiselink-challenge/src/models"
@@ -25,41 +24,34 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := jwt_auth.GenerateToken(userDB)
-	data, _ := json.Marshal(map[string]string{
-		"token": token,
-		"admin": strconv.FormatBool(userDB.Admin),
-	})
-
+	data := jwt_auth.GenerateToken(userDB)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
 
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	var user models.User
 	var UserRegisterDTO models.UserRegisterDTO
 
 	_ = json.NewDecoder(r.Body).Decode(&UserRegisterDTO)
-	user.Username = UserRegisterDTO.Username
-	user.Email = UserRegisterDTO.Email
-	hash, _ := hashPassword(UserRegisterDTO.Password)
-	user.Password = hash
-	user.Admin = false
 
-	checkUserByUsernameExists, _ := repository.GetUserByUsername(user.Username)
+	checkUserByUsernameExists, _ := repository.GetUserByUsername(UserRegisterDTO.Username)
 	if checkUserByUsernameExists.Username != "" {
 		_, _ = w.Write([]byte("User already exists"))
 		return
 	}
-
-	checkUserByEmailExists, _ := repository.GetUserByEmail(user.Email)
+	checkUserByEmailExists, _ := repository.GetUserByEmail(UserRegisterDTO.Email)
 	if checkUserByEmailExists.Email != "" {
 		_, _ = w.Write([]byte("Email already in use"))
 		return
 	}
 
-	user, err := repository.CreateUser(user)
+	_, err := repository.CreateUser(models.User{
+		Username: UserRegisterDTO.Username,
+		Email:    UserRegisterDTO.Email,
+		Password: hashPassword(UserRegisterDTO.Password),
+		Admin:    UserRegisterDTO.Username == "admin",
+	})
 	if err != nil {
 		_, _ = w.Write([]byte("Error creating user"))
 		return
@@ -67,9 +59,9 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write([]byte("User created successfully"))
 }
 
-func hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(bytes), err
+func hashPassword(password string) string {
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes)
 }
 
 func checkPasswordHash(hash, password string) bool {

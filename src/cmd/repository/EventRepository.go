@@ -54,8 +54,34 @@ func GetEvent(id string) (models.Event, error) {
 	return event, nil
 }
 
-func CreateEvent(event models.EventCreate, dateEvent, timeEvent time.Time) ([]byte, error) {
+func GetUsersForEvent(event *models.Event) ([]models.UserEventResponse, error) {
+	db, err := database.PostgreSQL()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Statement.Context.Done()
+
+	err = db.Model(&event).Association("Users").Find(&event.Users)
+	if err != nil {
+		return nil, err
+	}
+
+	var usersResponse []models.UserEventResponse
+	for _, user := range event.Users {
+		usersResponse = append(usersResponse, models.UserEventResponse{
+			Username: user.Username,
+			Email:    user.Email,
+		})
+	}
+
+	return usersResponse, nil
+}
+
+func CreateEvent(event models.EventCreate) ([]byte, error) {
 	db, _ := database.PostgreSQL()
+
+	dateEvent, _ := time.Parse("2006-01-02", event.Date)
+	timeEvent, _ := time.Parse("15:04", event.Time)
 	db.Create(&models.Event{
 		Title:     event.Title,
 		ShortDesc: event.ShortDesc,
@@ -71,13 +97,17 @@ func CreateEvent(event models.EventCreate, dateEvent, timeEvent time.Time) ([]by
 	return []byte("Event created"), nil
 }
 
-func UpdateEvent(param string, event models.EventUpdate, dateEvent, timeEvent time.Time) ([]byte, error) {
+func UpdateEvent(param string, event models.EventUpdate) ([]byte, error) {
 	var eventDB models.Event
 	db, _ := database.PostgreSQL()
 	db.Where("id = ?", param).First(&eventDB)
+
 	if eventDB.Id == 0 {
 		return []byte("Event not found"), nil
 	}
+
+	dateEvent, _ := time.Parse("2006-01-02", event.Date)
+	timeEvent, _ := time.Parse("15:04", event.Time)
 	db.Model(&eventDB).Updates(models.Event{
 		Title:     eventDB.Title,
 		ShortDesc: event.ShortDesc,

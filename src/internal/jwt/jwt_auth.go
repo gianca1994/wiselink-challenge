@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"encoding/json"
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/golang-jwt/jwt"
 	"log"
@@ -11,7 +12,7 @@ import (
 	"wiselink-challenge/src/models"
 )
 
-func GenerateToken(user models.User) string {
+func GenerateToken(user models.User) []byte {
 	claims := jwt.MapClaims{
 		"user_id":  user.Id,
 		"username": user.Username,
@@ -21,7 +22,12 @@ func GenerateToken(user models.User) string {
 	jwtauth.SetExpiry(claims, time.Now().Add(time.Minute*time.Duration(jwt_expire)))
 	jwtauth.SetIssuedAt(claims, time.Now())
 	_, token, _ := jwtauth.New("HS512", []byte(os.Getenv("JWT_SECRET")), nil).Encode(claims)
-	return token
+
+	data, _ := json.Marshal(map[string]string{
+		"token": token,
+		"admin": strconv.FormatBool(user.Admin),
+	})
+	return data
 }
 
 func ExtractClaims(tokenStr string) (jwt.MapClaims, bool) {

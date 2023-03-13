@@ -14,7 +14,7 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := service.GetProfileService(claims)
+	data, _ := service.GetProfileService(claims)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
 }
@@ -26,7 +26,7 @@ func GetRegisteredEvents(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filter := r.URL.Query().Get("filter")
-	data := service.GetRegisteredEvents(claims, filter)
+	data, _ := service.GetRegisteredEvents(claims, filter)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write(data)
 }
