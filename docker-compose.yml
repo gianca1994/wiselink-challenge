@@ -1,28 +1,35 @@
 version: "3.8"
 
 services:
-  app:
-    image: wise-link:latest
-    depends_on:
-      - postgreSQL
-    environment:
-      API_PORT: 8080
-      DB_HOST: postgreSQL
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: root
-      DB_NAME: wiselink
-      DB_SSL_MODE: disable
-      JWT_SECRET: secret
-      JWT_TIME_EXPIRE_MINUTES: 60
-    ports:
-      - "8080:8080"
+    app:
+        image: wiselink:latest
+        depends_on:
+            - db
+        environment:
+            - 'API_PORT=${API_PORT}'
+            - 'DB_HOST=${DB_HOST}'
+            - 'DB_PORT=${DB_PORT}'
+            - 'DB_USER=${DB_USER}'
+            - 'DB_PASSWORD=${DB_PASSWORD}'
+            - 'DB_NAME=${DB_NAME}'
+            - 'JWT_SECRET=${JWT_SECRET}'
+            - 'JWT_TIME_EXPIRE_MINUTES=${JWT_TIME_EXPIRE_MINUTES}'
+        ports:
+            - "8080:8080"
+        networks:
+            - wiselink
+        restart: "on-failure"
 
-  postgreSQL:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: wiselink
-    ports:
-      - "5432:5432"
+    db:
+        image: postgres
+        environment:
+            - 'POSTGRES_USER=${DB_USER}'
+            - 'POSTGRES_PASSWORD=${DB_PASSWORD}'
+            - 'POSTGRES_DB=${DB_NAME}'
+        volumes:
+            - ./db:/var/lib/postgresql/data
+        networks:
+            - wiselink
+
+networks:
+    wiselink:

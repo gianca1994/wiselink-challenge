@@ -35,12 +35,12 @@ func Migrate() {
 	}
 	defer db.Statement.Context.Done()
 
-	err_user := db.AutoMigrate(&models.User{})
-	if err_user != nil {
+	errUser := db.AutoMigrate(&models.User{})
+	if errUser != nil {
 		return
 	}
-	err_event := db.AutoMigrate(&models.Event{})
-	if err_event != nil {
+	errEvent := db.AutoMigrate(&models.Event{})
+	if errEvent != nil {
 		return
 	}
 

@@ -1,17 +1,17 @@
 module wiselink-challenge
 
-go 1.19
+go 1.18
 
 require (
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/jwtauth/v5 v5.1.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/jackc/pgx/v5 v5.3.0
+	github.com/jackc/pgx/v5 v5.3.1
 	github.com/joho/godotenv v1.5.1
-	golang.org/x/crypto v0.6.0
-	gorm.io/driver/postgres v1.4.8
-	gorm.io/gorm v1.24.6
+	golang.org/x/crypto v0.7.0
+	gorm.io/driver/postgres v1.5.0
+	gorm.io/gorm v1.24.7-0.20230306060331-85eaf9eeda11
 )
 
 require (
@@ -27,5 +27,5 @@ require (
 	github.com/lestrrat-go/iter v1.0.2 // indirect
 	github.com/lestrrat-go/jwx/v2 v2.0.6 // indirect
 	github.com/lestrrat-go/option v1.0.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
+	golang.org/x/text v0.8.0 // indirect
 )
